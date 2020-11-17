@@ -9,15 +9,17 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"os"
 
 	"github.com/google/uuid"
 )
 
 const (
-	TouchAnnotation             = "openshift.io/touch"
-	VeleroNamespace             = "openshift-migration"
-	OpenshiftMigrationNamespace = "openshift-migration"
+	TouchAnnotation = "openshift.io/touch"
 )
+
+var VeleroNamespace = os.Getenv("WATCH_NAMESPACE")
+var OpenshiftMigrationNamespace = os.Getenv("WATCH_NAMESPACE")
 
 // Plan
 func (r *MigPlan) GetCorrelationLabels() map[string]string {

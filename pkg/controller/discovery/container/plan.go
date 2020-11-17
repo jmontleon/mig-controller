@@ -4,6 +4,7 @@ import (
 	"context"
 	migapi "github.com/konveyor/mig-controller/pkg/apis/migration/v1alpha1"
 	"github.com/konveyor/mig-controller/pkg/controller/discovery/model"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/event"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
@@ -59,7 +60,7 @@ func (r *Plan) Reconcile() error {
 func (r *Plan) GetDiscovered() ([]model.Model, error) {
 	models := []model.Model{}
 	onCluster := migapi.MigPlanList{}
-	err := r.ds.Client.List(context.TODO(), nil, &onCluster)
+	err := r.ds.Client.List(context.TODO(), &client.ListOptions{Namespace: migapi.OpenshiftMigrationNamespace}, &onCluster)
 	if err != nil {
 		Log.Trace(err)
 		return nil, err
@@ -184,7 +185,7 @@ func (r *Migration) Reconcile() error {
 func (r *Migration) GetDiscovered() ([]model.Model, error) {
 	models := []model.Model{}
 	onCluster := migapi.MigMigrationList{}
-	err := r.ds.Client.List(context.TODO(), nil, &onCluster)
+	err := r.ds.Client.List(context.TODO(), &client.ListOptions{Namespace: migapi.OpenshiftMigrationNamespace}, &onCluster)
 	if err != nil {
 		Log.Trace(err)
 		return nil, err
