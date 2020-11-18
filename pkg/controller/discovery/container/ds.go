@@ -230,7 +230,7 @@ func (r *DataSource) buildManager(name string) error {
 	if name == "" {
 		name = "local"
 	}
-	r.manager, err = manager.New(r.RestCfg, manager.Options{})
+	r.manager, err = manager.New(r.RestCfg, manager.Options{Namespace: migapi.OpenshiftMigrationNamespace})
 	if err != nil {
 		Log.Trace(err)
 		return err

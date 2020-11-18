@@ -323,15 +323,15 @@ func (r *ReconcileMigCluster) validateSaTokenPrivileges(cluster *migapi.MigClust
 	if err != nil {
 		return liberr.Wrap(err)
 	}
-
-	if !migrationSar.Status.Allowed || !veleroSar.Status.Allowed {
-		cluster.Status.SetCondition(migapi.Condition{
-			Type:     SaTokenNotPrivileged,
-			Status:   True,
-			Reason:   Unauthorized,
-			Category: Critical,
-			Message:  fmt.Sprintf("The `saToken` has insufficient privileges."),
-		})
-	}
+	// // FIXME: This won't work for dedicated / restricted permissions
+	//if !migrationSar.Status.Allowed || !veleroSar.Status.Allowed {
+	//	cluster.Status.SetCondition(migapi.Condition{
+	//		Type:     SaTokenNotPrivileged,
+	//		Status:   True,
+	//		Reason:   Unauthorized,
+	//		Category: Critical,
+	//		Message:  fmt.Sprintf("The `saToken` has insufficient privileges."),
+	//	})
+	//}
 	return nil
 }
