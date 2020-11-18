@@ -572,7 +572,9 @@ func (m *MigCluster) GetInternalRegistryPath(c k8sclient.Client) (string, error)
 			},
 			&config)
 		if err != nil {
-			return "", err
+			// FIXME: what's the right thing to do here if we error on permissions.
+			// Maybe the operator can get the value and put it in a configmap we can be assured we can read?
+			return "", nil
 		}
 		serverConfig := apiServerConfig{}
 		err = json.Unmarshal([]byte(config.Data["config.yaml"]), &serverConfig)
