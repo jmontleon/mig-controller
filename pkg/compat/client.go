@@ -3,8 +3,8 @@ package compat
 import (
 	"context"
 	"errors"
-	"regexp"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -22,6 +22,7 @@ import (
 )
 
 var OpenshiftMigrationNS = os.Getenv("WATCH_NAMESPACE")
+
 //
 // A smart client.
 // Provides seamless API version compatibility.
@@ -203,7 +204,11 @@ func (c client) Get(ctx context.Context, key k8sclient.ObjectKey, in runtime.Obj
 // The resource will be converted to a compatible version as needed.
 func (c client) List(ctx context.Context, opt *k8sclient.ListOptions, in runtime.Object) error {
 	obj, err := c.downConvert(ctx, in)
-	opt.Namespace = OpenshiftMigrationNS
+
+	if opt.Namespace == "" {
+		opt.Namespace = OpenshiftMigrationNS
+	}
+
 	if err != nil {
 		return err
 	}
