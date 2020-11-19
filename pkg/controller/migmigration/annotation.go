@@ -649,9 +649,10 @@ func (t *Task) deletePVAnnotations(client k8sclient.Client) error {
 	options := k8sclient.MatchingLabels(labels)
 	pvList := corev1.PersistentVolumeList{}
 	err := client.List(context.TODO(), options, &pvList)
-	if err != nil {
-		return liberr.Wrap(err)
-	}
+	// FIXME: This won't work without cluster permissions. What's the right thing to do.
+	//if err != nil {
+	//	return liberr.Wrap(err)
+	//}
 	for _, pv := range pvList.Items {
 		delete(pv.Labels, IncludedInStageBackupLabel)
 		delete(pv.Annotations, PvActionAnnotation)
