@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"strconv"
 	"time"
+	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -29,9 +30,10 @@ var Settings = &settings.Settings
 const (
 	AwsAccessKeyId          = "aws-access-key-id"
 	AwsSecretAccessKey      = "aws-secret-access-key"
-	AwsCloudSecretName      = "cloud-credentials"
 	AwsCloudCredentialsPath = "credentials/cloud"
 )
+
+var AwsCloudSecretName      = "cloud-credentials-" + os.Getenv("WATCH_NAMESPACE")
 
 // S3 constants
 const (

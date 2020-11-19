@@ -24,6 +24,7 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+	"os"
 
 	liberr "github.com/konveyor/controller/pkg/error"
 	velero "github.com/vmware-tanzu/velero/pkg/apis/velero/v1"
@@ -586,7 +587,7 @@ func (r *MigPlan) GetCloudSecret(client k8sclient.Client, provider pvdr.Provider
 	return GetSecret(
 		client,
 		&kapi.ObjectReference{
-			Namespace: VeleroNamespace,
+			Namespace: os.Getenv("POD_NAMESPACE"),
 			Name:      provider.GetCloudSecretName(),
 		})
 }

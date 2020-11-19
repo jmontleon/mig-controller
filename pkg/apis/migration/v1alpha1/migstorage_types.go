@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	"reflect"
+	"os"
 
 	pvdr "github.com/konveyor/mig-controller/pkg/cloudprovider"
 	velero "github.com/vmware-tanzu/velero/pkg/apis/velero/v1"
@@ -140,7 +141,7 @@ func (r *MigStorage) BuildBSLCloudSecret() *kapi.Secret {
 	secret := &kapi.Secret{
 		ObjectMeta: metav1.ObjectMeta{
 			Labels:    r.GetCorrelationLabels(),
-			Namespace: VeleroNamespace,
+			Namespace: os.Getenv("POD_NAMESPACE"),
 			Name:      r.GetBackupStorageProvider().GetCloudSecretName(),
 		},
 	}
