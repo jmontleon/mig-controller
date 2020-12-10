@@ -2,10 +2,9 @@ package pods
 
 import (
 	"context"
-	"os"
 
 	liberr "github.com/konveyor/controller/pkg/error"
-	//migapi "github.com/konveyor/mig-controller/pkg/apis/migration/v1alpha1"
+	migapi "github.com/konveyor/mig-controller/pkg/apis/migration/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/apimachinery/pkg/labels"
@@ -19,6 +18,7 @@ func FindVeleroPods(client k8sclient.Client) ([]corev1.Pod, error) {
 	labelSelector := labels.SelectorFromSet(
 		map[string]string{
 			"component": "velero",
+			"namespace": migapi.OpenshiftMigrationNamespace,
 		})
 	fieldSelector := fields.SelectorFromSet(
 		map[string]string{
@@ -27,7 +27,7 @@ func FindVeleroPods(client k8sclient.Client) ([]corev1.Pod, error) {
 	err := client.List(
 		context.TODO(),
 		&k8sclient.ListOptions{
-			Namespace:     os.Getenv("POD_NAMESPACE"),
+			Namespace:     migapi.PodNamespace,
 			LabelSelector: labelSelector,
 			FieldSelector: fieldSelector,
 		},

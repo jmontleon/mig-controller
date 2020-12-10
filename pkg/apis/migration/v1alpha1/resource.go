@@ -18,8 +18,11 @@ const (
 	TouchAnnotation = "openshift.io/touch"
 )
 
-var VeleroNamespace = os.Getenv("WATCH_NAMESPACE")
-var OpenshiftMigrationNamespace = os.Getenv("WATCH_NAMESPACE")
+var (
+	VeleroNamespace             = os.Getenv("WATCH_NAMESPACE")
+	OpenshiftMigrationNamespace = os.Getenv("WATCH_NAMESPACE")
+	PodNamespace                = os.Getenv("POD_NAMESPACE")
+)
 
 // Plan
 func (r *MigPlan) GetCorrelationLabels() map[string]string {

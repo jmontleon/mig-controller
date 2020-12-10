@@ -341,6 +341,7 @@ func getRegistryPods(plan *migapi.MigPlan, registryClient compat.Client) (corev1
 			migapi.MigrationRegistryLabel: True,
 			"migplan":                     string(plan.UID),
 		}),
+		Namespace: migapi.PodNamespace,
 	}, &registryPodList)
 
 	if err != nil {

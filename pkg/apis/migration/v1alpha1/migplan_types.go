@@ -20,11 +20,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"reflect"
 	"regexp"
 	"sort"
 	"strings"
-	"os"
 
 	liberr "github.com/konveyor/controller/pkg/error"
 	velero "github.com/vmware-tanzu/velero/pkg/apis/velero/v1"
@@ -247,7 +247,7 @@ func (r *MigPlan) BuildRegistrySecret(client k8sclient.Client, storage *MigStora
 		ObjectMeta: metav1.ObjectMeta{
 			Labels:       labels,
 			GenerateName: "registry-" + string(r.UID) + "-",
-			Namespace:    VeleroNamespace,
+			Namespace:    PodNamespace,
 		},
 	}
 	return secret, r.UpdateRegistrySecret(client, storage, secret)
@@ -305,7 +305,7 @@ func (r *MigPlan) BuildRegistryDeployment(storage *MigStorage, proxySecret *kapi
 		ObjectMeta: metav1.ObjectMeta{
 			Labels:    labels,
 			Name:      name,
-			Namespace: VeleroNamespace,
+			Namespace: PodNamespace,
 		},
 	}
 	r.UpdateRegistryDeployment(storage, deployment, proxySecret, name, dirName, registryImage)
@@ -322,7 +322,7 @@ func (r *MigPlan) GetRegistryProxySecret(client k8sclient.Client) (*kapi.Secret,
 	err := client.List(
 		context.TODO(),
 		&k8sclient.ListOptions{
-			Namespace:     VeleroNamespace,
+			Namespace:     PodNamespace,
 			LabelSelector: selector,
 		},
 		&list,
@@ -442,7 +442,10 @@ func (r *MigPlan) GetRegistryDeployment(client k8sclient.Client) (*appsv1.Deploy
 	labels[MigrationRegistryLabel] = True
 	err := client.List(
 		context.TODO(),
-		k8sclient.MatchingLabels(labels),
+		&k8sclient.ListOptions{
+			Namespace:     PodNamespace,
+			LabelSelector: k8sLabels.SelectorFromSet(labels),
+		},
 		&list)
 	if err != nil {
 		return nil, err
@@ -488,7 +491,7 @@ func (r *MigPlan) BuildRegistryService(name string) *kapi.Service {
 		ObjectMeta: metav1.ObjectMeta{
 			Labels:    labels,
 			Name:      name,
-			Namespace: VeleroNamespace,
+			Namespace: PodNamespace,
 		},
 	}
 	r.UpdateRegistryService(service, name)
@@ -521,7 +524,10 @@ func (r *MigPlan) GetRegistryService(client k8sclient.Client) (*kapi.Service, er
 	labels[MigrationRegistryLabel] = True
 	err := client.List(
 		context.TODO(),
-		k8sclient.MatchingLabels(labels),
+		&k8sclient.ListOptions{
+			Namespace:     PodNamespace,
+			LabelSelector: k8sLabels.SelectorFromSet(labels),
+		},
 		&list)
 	if err != nil {
 		return nil, err
