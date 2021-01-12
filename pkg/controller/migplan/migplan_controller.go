@@ -229,12 +229,13 @@ func (r *ReconcileMigPlan) Reconcile(request reconcile.Request) (reconcile.Resul
 		return reconcile.Result{Requeue: true}, nil
 	}
 
+	//FIXME
 	// PV discovery
-	err = r.updatePvs(plan)
-	if err != nil {
-		log.Trace(err)
-		return reconcile.Result{Requeue: true}, nil
-	}
+	//err = r.updatePvs(plan)
+	//if err != nil {
+	//	log.Trace(err)
+	//	return reconcile.Result{Requeue: true}, nil
+	//}
 
 	// Validate NFS PV accessibility.
 	nfsValidation := NfsValidation{Plan: plan}
